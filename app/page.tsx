@@ -93,6 +93,11 @@ export default function CampaignLanding() {
 
       {/* -------------------------------------------------------- hero --- */}
       <section className={s.hero}>
+        <div className={s.aurora} aria-hidden>
+          <span className={s.auroraBlob1} />
+          <span className={s.auroraBlob2} />
+          <span className={s.auroraBlob3} />
+        </div>
         <div className={s.heroTop}>
           {/* Never fades: the hero headline is the first thing a visitor sees
               and must never depend on JS/observer timing to become visible. */}
