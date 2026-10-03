@@ -274,7 +274,7 @@ export function CourseBuilderScreen({ compact = false }: { compact?: boolean }) 
   ];
   return (
     <div className="p-5">
-      <div className="flex items-center justify-between gap-2">
+      <div className="flex flex-wrap items-center justify-between gap-2">
         <div>
           <Label>Course builder</Label>
           <p className="mt-1 font-display text-[16px] font-semibold tracking-tight">Prelims Foundation Batch</p>
@@ -569,7 +569,7 @@ export function GrowModule() {
   ];
   return (
     <div className="p-5">
-      <div className="grid grid-cols-4 gap-2">
+      <div className="grid grid-cols-4 gap-2 max-sm:grid-cols-2">
         {cols.map((col) => (
           <div key={col.k} className="min-w-0 rounded-xl bg-slate-50 p-2">
             <p className="flex items-center gap-1.5 text-[10px] font-semibold text-slate-500">
@@ -745,9 +745,9 @@ export function slugify(name: string) {
 /* Small shared bits                                                   */
 /* ------------------------------------------------------------------ */
 
-export function CheckItem({ children, dark = false }: { children: React.ReactNode; dark?: boolean }) {
+export function CheckItem({ children, dark = false, className = "" }: { children: React.ReactNode; dark?: boolean; className?: string }) {
   return (
-    <li className={`flex items-start gap-2.5 text-[15px] ${dark ? "text-white/80" : "text-slate-700"}`}>
+    <li className={`flex items-start gap-2.5 text-[15px] ${dark ? "text-white/80" : "text-slate-700"} ${className}`}>
       <span className={`mt-[3px] grid h-[18px] w-[18px] shrink-0 place-items-center rounded-full ${dark ? "bg-aqua/15 text-aqua" : "bg-iris-50 text-iris"}`}>
         <Check className="h-3 w-3" strokeWidth={3} aria-hidden />
       </span>

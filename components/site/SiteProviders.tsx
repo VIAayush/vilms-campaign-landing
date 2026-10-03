@@ -32,6 +32,14 @@ export function SiteProviders({ children }: { children: React.ReactNode }) {
 
   useEffect(() => armReveal(), [pathname]);
 
+  // Low-powered or data-saving devices get lighter continuous animation
+  // (applied by CSS below 1024px only; see landing.css "v2-lite").
+  useEffect(() => {
+    const nav = navigator as Navigator & { connection?: { saveData?: boolean }; deviceMemory?: number };
+    const lite = (nav.hardwareConcurrency ?? 8) <= 4 || (nav.deviceMemory ?? 8) <= 3 || nav.connection?.saveData === true;
+    document.documentElement.classList.toggle("v2-lite", lite);
+  }, []);
+
   // demo_form_open is recorded by the form itself when it mounts, so the
   // dialog and the /demo page count the same way.
   const openLeadForm = useCallback((next: LeadIntent) => setIntent(next), []);

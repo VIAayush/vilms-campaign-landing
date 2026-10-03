@@ -68,7 +68,7 @@ export function GrowSection() {
   const counts = [0, 1, 2, 3].map((c) => board.col.filter((x) => x === c).length);
 
   return (
-    <section id="crm" aria-labelledby="crm-title" className="relative overflow-hidden bg-snow py-24 sm:py-32">
+    <section id="crm" aria-labelledby="crm-title" className="relative overflow-hidden bg-snow py-24 max-sm:py-20 sm:py-32">
       <div aria-hidden className="grid-bg-light pointer-events-none absolute inset-0" />
       <div className="wrap relative">
         <div className="grid items-end gap-6 lg:grid-cols-[1.1fr_0.9fr]">
@@ -82,14 +82,52 @@ export function GrowSection() {
           </div>
           <div data-reveal data-delay="2">
             <p className="lead-text">{grow.sub}</p>
-            <Cta intent="demo" location="crm_section" className="b b-dark mt-6" arrow>
+            <Cta intent="demo" location="crm_section" className="b b-dark mt-6 max-sm:w-full" arrow>
               Book a Demo
             </Cta>
           </div>
         </div>
 
         <div ref={ref} className="relative mt-14" data-reveal="scale">
-          <div className="no-bar overflow-x-auto rounded-[28px] border border-slate-200/80 bg-white p-3 shadow-[0_40px_90px_-50px_rgba(11,16,32,.5)] sm:p-4">
+          {/* Phones: the same pipeline as a vertical stage list */}
+          <ol className="space-y-2.5 md:hidden" aria-label="Lead pipeline (illustrative)">
+            {grow.columns.map((c, ci) => (
+              <li key={c} className="rounded-2xl border border-slate-200/80 bg-white p-3.5 shadow-[0_16px_40px_-30px_rgba(11,16,32,.5)]">
+                <p className="flex items-center gap-2 text-[12.5px] font-semibold uppercase tracking-[0.06em] text-slate-500">
+                  <span className={`h-2 w-2 rounded-full ${COL_DOT[ci]}`} /> {c}
+                  <span className="ml-auto rounded-full bg-slate-50 px-2 py-0.5 font-mono text-[11px] text-slate-400 ring-1 ring-slate-200">{counts[ci]}</span>
+                </p>
+                <ul className="mt-2.5 flex min-h-[36px] flex-wrap gap-1.5">
+                  {LEADS.map((l, i) =>
+                    board.col[i] === ci ? (
+                      <li
+                        key={`${l.name}-${board.order[i]}`}
+                        className={`m-pop flex items-center gap-1.5 rounded-full py-1 pl-1 pr-3 text-[13px] font-medium ring-1 ${
+                          board.last?.lead === i ? "bg-iris-50 text-iris-600 ring-iris-300" : "bg-slate-50 text-slate-700 ring-slate-200"
+                        }`}
+                      >
+                        <span className="grid h-6 w-6 place-items-center rounded-full bg-white text-[10px] font-semibold text-iris-600 ring-1 ring-iris-100">
+                          {l.name.slice(0, 1)}
+                          {l.name.split(" ")[1]?.[0]}
+                        </span>
+                        {l.name}
+                      </li>
+                    ) : null,
+                  )}
+                </ul>
+              </li>
+            ))}
+          </ol>
+          {board.last && NOTE[board.last.to] ? (
+            <p key={`m-${board.seq}`} className="m-pop mt-3 flex items-center gap-2 text-[13px] text-slate-600 md:hidden" aria-hidden>
+              <MessageCircle className="h-4 w-4 shrink-0 text-emerald-500" />
+              <span>
+                <span className="font-semibold text-night">{LEADS[board.last.lead].name}</span> · {NOTE[board.last.to]}
+              </span>
+            </p>
+          ) : null}
+
+          <div className="no-bar overflow-x-auto rounded-[28px] border border-slate-200/80 bg-white p-3 shadow-[0_40px_90px_-50px_rgba(11,16,32,.5)] max-md:hidden sm:p-4">
             <div className="relative min-w-[720px]" style={{ height: 52 + MAX_ROWS * (CARD_H + GAP) }}>
               {grow.columns.map((c, ci) => (
                 <div key={c} className="absolute top-0 h-full px-1.5" style={{ left: `${ci * 25}%`, width: "25%" }}>
@@ -130,7 +168,7 @@ export function GrowSection() {
             </div>
           </div>
           {board.last && NOTE[board.last.to] ? (
-            <div key={board.seq} className="toast pop absolute -bottom-5 right-4 flex items-center gap-2.5 px-3.5 py-2.5 text-[12.5px] sm:right-8" aria-hidden>
+            <div key={board.seq} className="toast pop absolute -bottom-5 right-4 flex items-center gap-2.5 px-3.5 py-2.5 text-[12.5px] max-md:hidden sm:right-8" aria-hidden>
               <span className={`h-2 w-2 rounded-full ${COL_DOT[board.last.to]}`} />
               <span className="font-semibold">{LEADS[board.last.lead].name}</span>
               <span className="text-slate-500">{NOTE[board.last.to]}</span>
@@ -139,7 +177,7 @@ export function GrowSection() {
           <p className="mt-8 text-[12px] text-slate-400">Illustrative pipeline · sample leads</p>
         </div>
 
-        <ul className="mt-14 grid gap-x-10 gap-y-8 sm:grid-cols-2 lg:grid-cols-3">
+        <ul className="mt-14 grid gap-x-10 gap-y-8 max-sm:mt-10 max-sm:gap-y-6 sm:grid-cols-2 lg:grid-cols-3">
           {grow.features.map((f, i) => {
             const Icon = FEATURE_ICONS[i];
             return (

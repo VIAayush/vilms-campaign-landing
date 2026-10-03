@@ -5,7 +5,7 @@ import { Magnetic } from "./Magnetic";
 
 export function FinalCta() {
   return (
-    <section aria-labelledby="final-title" className="sec-dark noise overflow-hidden py-28 sm:py-40">
+    <section aria-labelledby="final-title" className="sec-dark noise overflow-hidden py-28 max-sm:py-20 sm:py-40">
       <div aria-hidden className="pointer-events-none absolute inset-0 -z-10">
         <div className="glow left-1/2 top-1/2 h-[620px] w-[980px] -translate-x-1/2 -translate-y-1/2 animate-drift-a" style={{ background: "radial-gradient(closest-side, rgba(91,91,246,.55), rgba(139,92,246,.25), transparent)" }} />
         <div className="grid-bg absolute inset-0" />
@@ -14,19 +14,19 @@ export function FinalCta() {
         <p className="kicker on-dark justify-center" data-reveal>
           {finalCta.eyebrow}
         </p>
-        <h2 id="final-title" className="display mx-auto mt-6 max-w-[1000px] text-[clamp(40px,6.6vw,92px)]" data-reveal="blur" data-delay="1">
+        <h2 id="final-title" className="display mx-auto mt-6 max-w-[1000px] text-[clamp(40px,6.6vw,92px)] max-sm:text-[clamp(34px,10vw,44px)]" data-reveal="blur" data-delay="1">
           Ready to bring your institute onto <span className="grad-text">one platform?</span>
         </h2>
         <p className="lead-text mx-auto mt-6 max-w-[620px]" data-reveal data-delay="2">
           {finalCta.sub}
         </p>
-        <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row" data-reveal data-delay="3">
-          <Magnetic>
-            <Cta intent="demo" location="final_cta" className="b b-cta h-[56px] px-8 text-[16px]" arrow>
+        <div className="mt-10 flex flex-col items-center justify-center gap-3 max-sm:items-stretch sm:flex-row" data-reveal data-delay="3">
+          <Magnetic className="max-sm:w-full">
+            <Cta intent="demo" location="final_cta" className="b b-cta h-[56px] px-8 text-[16px] max-sm:w-full" arrow>
               Book a Demo
             </Cta>
           </Magnetic>
-          <Cta intent="trial" location="final_cta_trial" className="b b-glass h-[56px] px-8 text-[16px]">
+          <Cta intent="trial" location="final_cta_trial" className="b b-glass h-[56px] px-8 text-[16px] max-sm:w-full">
             Start 14-Day Free Trial
           </Cta>
         </div>

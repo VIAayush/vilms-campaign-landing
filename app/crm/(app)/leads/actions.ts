@@ -5,6 +5,9 @@
 // the only protection.
 
 import { revalidatePath } from "next/cache";
+import { after } from "next/server";
+import type { LeadPayload } from "@/lib/integrations/adapters";
+import { dispatchLeadEvents, eventsForStatusChange } from "@/lib/integrations/dispatch";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { authorize, canEdit, isAdmin } from "@/lib/crm/dal";
@@ -17,6 +20,8 @@ import { createSessionClient } from "@/lib/supabase/server";
 export type ActionState = { error?: string; ok?: string } | null;
 
 const idSchema = z.uuid();
+const LEAD_EVENT_COLUMNS =
+  "id, full_name, institute_name, email, phone, city, institute_type, student_count, interest, status, channel, source, medium, campaign, visitor_id, created_at";
 
 function refresh(id: string) {
   revalidatePath(`/crm/leads/${id}`);
@@ -42,6 +47,7 @@ export async function updatePipeline(leadId: string, _prev: ActionState, formDat
   if (followUp === undefined) return { error: "Enter a valid follow-up date and time." };
 
   const supabase = await createSessionClient();
+  const { data: before } = await supabase.from("leads").select("status").eq("id", leadId).maybeSingle();
   const { data, error } = await supabase
     .from("leads")
     .update({
@@ -51,8 +57,15 @@ export async function updatePipeline(leadId: string, _prev: ActionState, formDat
       next_follow_up_at: followUp,
     })
     .eq("id", leadId)
-    .select("id");
+    .select(LEAD_EVENT_COLUMNS);
   if (error || !data?.length) return { error: "Couldn't save. Refresh and try again." };
+
+  // Status automations (only for integrations an admin enabled for them).
+  const events = before ? eventsForStatusChange(before.status, parsed.data.status) : [];
+  if (events.length) {
+    const lead = data[0] as unknown as LeadPayload;
+    after(() => dispatchLeadEvents(events, { ...lead, previous_status: before!.status }));
+  }
 
   refresh(leadId);
   return { ok: "Saved." };

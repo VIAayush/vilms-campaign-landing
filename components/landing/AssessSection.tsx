@@ -136,7 +136,7 @@ export function AssessSection() {
   const step = manual ?? (reduced ? assess.steps.length - 1 : tick);
 
   return (
-    <section id="ai" aria-labelledby="ai-title" className="sec-dark noise overflow-hidden py-24 sm:py-32">
+    <section id="ai" aria-labelledby="ai-title" className="sec-dark noise overflow-hidden py-24 max-sm:py-20 sm:py-32">
       <div aria-hidden className="pointer-events-none absolute inset-0 -z-10">
         <div className="glow left-1/2 top-[30%] h-[600px] w-[900px] -translate-x-1/2 bg-violet/25" />
         <div className="glow -left-40 bottom-0 h-[400px] w-[400px] bg-aqua/15" />
@@ -161,12 +161,13 @@ export function AssessSection() {
           {/* Workflow steps */}
           <ol className="no-bar flex gap-1.5 overflow-x-auto pb-1" aria-label="Evaluation workflow">
             {assess.steps.map((s, i) => (
-              <li key={s.id} className="min-w-[150px] flex-1">
+              <li key={s.id} className={`flex-1 max-sm:min-w-0 sm:min-w-[150px] ${i === step ? "max-sm:flex-[3]" : ""}`}>
                 <button
                   type="button"
                   onClick={() => setManual(i)}
                   aria-current={i === step ? "step" : undefined}
-                  className={`w-full rounded-2xl px-3.5 py-3 text-left transition ${i === step ? "bg-white/[0.1]" : "hover:bg-white/[0.04]"}`}
+                  aria-label={s.label}
+                  className={`w-full rounded-2xl px-3.5 py-3 text-left transition max-sm:min-h-[48px] max-sm:px-2 ${i === step ? "bg-white/[0.1]" : "hover:bg-white/[0.04]"}`}
                 >
                   <span className="flex items-center gap-2">
                     <span
@@ -176,7 +177,7 @@ export function AssessSection() {
                     >
                       {i + 1}
                     </span>
-                    <span className={`text-[13.5px] font-semibold ${i === step ? "text-white" : "text-white/55"}`}>{s.label}</span>
+                    <span className={`truncate text-[13.5px] font-semibold ${i === step ? "text-white" : "text-white/55 max-sm:hidden"}`}>{s.label}</span>
                   </span>
                   <span className="mt-2 block h-[2px] overflow-hidden rounded-full bg-white/10">
                     <span
@@ -195,7 +196,7 @@ export function AssessSection() {
           </ol>
 
           <div className="mt-3 grid gap-3 rounded-[22px] bg-[#F4F5FA] p-3 text-night sm:p-5 md:grid-cols-[1fr_1fr] md:gap-5">
-            <div className="relative min-h-[260px]">
+            <div className="relative min-h-[260px] max-md:max-h-[200px] max-md:min-h-0 max-md:overflow-hidden max-md:rounded-xl">
               <AnswerSheet scanning={step === 1} />
               {step >= 3 && (
                 <span className="pop absolute right-4 top-12 rotate-[-8deg] rounded-lg border-2 border-emerald-500 px-2 py-1 font-mono text-[12px] font-bold uppercase text-emerald-600">
@@ -203,7 +204,7 @@ export function AssessSection() {
                 </span>
               )}
             </div>
-            <div className="min-h-[300px] rounded-[18px] bg-white/60 p-3 sm:p-4" aria-live="polite">
+            <div className="min-h-[300px] rounded-[18px] bg-white/60 p-3 max-md:min-h-[270px] sm:p-4" aria-live="polite">
               <RightPanel step={step} />
             </div>
           </div>
@@ -233,7 +234,7 @@ export function AssessSection() {
               </li>
             ))}
           </ul>
-          <Cta intent="demo" location="ai_evaluation" className="b b-cta shrink-0" arrow>
+          <Cta intent="demo" location="ai_evaluation" className="b b-cta shrink-0 max-sm:w-full" arrow>
             See evaluation in a demo
           </Cta>
         </div>

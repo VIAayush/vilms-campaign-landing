@@ -2,19 +2,20 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { BarChart3, Gauge, Users, UserCog, UserRound } from "lucide-react";
+import { BarChart3, Gauge, Plug, Users, UserCog, UserRound } from "lucide-react";
 
 const ITEMS = [
   { href: "/crm", label: "Dashboard", icon: Gauge, exact: true },
   { href: "/crm/leads", label: "Leads", icon: Users },
   { href: "/crm/analytics", label: "Analytics", icon: BarChart3 },
+  { href: "/crm/integrations", label: "API & Integrations", icon: Plug, adminOnly: true },
   { href: "/crm/team", label: "Team", icon: UserCog, ownerOnly: true },
   { href: "/crm/account", label: "Account", icon: UserRound },
 ];
 
-export function CrmNav({ isOwner, layout }: { isOwner: boolean; layout: "side" | "top" }) {
+export function CrmNav({ isOwner, isAdmin = false, layout }: { isOwner: boolean; isAdmin?: boolean; layout: "side" | "top" }) {
   const pathname = usePathname();
-  const items = ITEMS.filter((i) => !i.ownerOnly || isOwner);
+  const items = ITEMS.filter((i) => (!i.ownerOnly || isOwner) && (!i.adminOnly || isAdmin));
 
   return (
     <nav aria-label="CRM" className={layout === "side" ? "flex flex-col gap-1" : "flex gap-1 overflow-x-auto"}>

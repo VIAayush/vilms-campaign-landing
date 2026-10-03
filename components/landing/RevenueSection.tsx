@@ -59,12 +59,17 @@ function Flow() {
       </svg>
       <ol className="relative grid gap-4 sm:grid-cols-3">
         {nodes.map(({ icon: Icon, title, text }, i) => (
-          <li key={title} className="flex flex-col items-center text-center" data-reveal data-delay={String(i + 1)}>
+          <li key={title} className="relative flex flex-col items-center text-center max-sm:flex-row max-sm:gap-4 max-sm:text-left" data-reveal data-delay={String(i + 1)}>
+            {i > 0 && (
+              <span aria-hidden className="absolute -top-4 left-[37px] h-4 w-px bg-gradient-to-b from-iris to-aqua sm:hidden" />
+            )}
             <span className={`grid h-[76px] w-[76px] place-items-center rounded-[24px] ring-1 ${i === 2 ? "bg-emerald-400/15 text-emerald-300 ring-emerald-300/30" : "bg-white/[0.06] text-iris-300 ring-white/10"}`}>
               <Icon className="h-8 w-8" aria-hidden />
             </span>
-            <p className="mt-4 font-display text-[17px] font-semibold tracking-tight">{title}</p>
-            <p className="text-[13.5px] text-white/55">{text}</p>
+            <div className="sm:contents">
+              <p className="mt-4 font-display text-[17px] font-semibold tracking-tight max-sm:mt-0">{title}</p>
+              <p className="text-[13.5px] text-white/55">{text}</p>
+            </div>
           </li>
         ))}
       </ol>
@@ -97,7 +102,7 @@ export function RevenueSection() {
       </div>
 
       {/* Payments */}
-      <div className="wrap grid items-center gap-14 py-24 sm:py-32 lg:grid-cols-[0.9fr_1.1fr]">
+      <div className="wrap grid items-center gap-14 py-24 max-sm:gap-10 max-sm:py-20 sm:py-32 lg:grid-cols-[0.9fr_1.1fr]">
         <div>
           <p className="kicker on-dark" data-reveal>
             {payments.kicker}
@@ -120,14 +125,14 @@ export function RevenueSection() {
       </div>
 
       {/* 0% revenue share */}
-      <div className="relative border-t border-white/10 py-24 sm:py-32">
+      <div className="relative border-t border-white/10 py-24 max-sm:py-20 sm:py-32">
         <div className="wrap text-center">
           <p className="kicker on-dark justify-center" data-reveal>
             0% revenue share — always
           </p>
           <div ref={numRef} className="mt-8">
             <p className="text-[15px] text-white/55">200 students × ₹15,000 a year in student fees</p>
-            <p className="display mt-3 text-[clamp(52px,10vw,148px)] tabular-nums" aria-label="₹30,00,000">
+            <p className="display mt-3 text-[clamp(52px,10vw,148px)] tabular-nums max-sm:text-[clamp(38px,12.4vw,60px)]" aria-label="₹30,00,000">
               ₹{inr.format(fees)}
             </p>
           </div>
@@ -177,7 +182,7 @@ export function RevenueSection() {
               <p className="max-w-[560px] text-[15px] text-white/70">
                 <span className="font-display text-[26px] font-semibold text-white">{whyVilms.saving}</span> {whyVilms.savingText}
               </p>
-              <Cta intent="demo" location="revenue_share" className="b b-cta shrink-0" arrow>
+              <Cta intent="demo" location="revenue_share" className="b b-cta shrink-0 max-sm:w-full" arrow>
                 Talk to a VILMS expert
               </Cta>
             </div>

@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { lifecycle } from "@/lib/landing";
-import { useReducedMotion, useScrollProgress } from "./hooks";
+import { useInView, useMediaQuery, useReducedMotion, useScrollProgress } from "./hooks";
 import {
   AppWindow,
   CertificateScreen,
@@ -31,8 +31,21 @@ export function Lifecycle() {
   const chips = useRef<HTMLOListElement>(null);
   const reduced = useReducedMotion();
   const [active, setActive] = useState(0);
+  // Desktop (lg+) is the approved pinned scroll scene. Phones and tablets get
+  // a normal-height section: tap or swipe the stages, with a gentle autoplay.
+  const desktop = useMediaQuery("(min-width: 1024px)");
+  const pinned = desktop && !reduced;
+  const [touched, setTouched] = useState(false);
+  const inView = useInView(scene, { margin: "-20% 0px" });
+  const swipe = useRef<number | null>(null);
 
-  useScrollProgress(section, scene, (p) => setActive(Math.min(COUNT - 1, Math.floor(p * COUNT * 0.999))), !reduced);
+  useScrollProgress(section, scene, (p) => setActive(Math.min(COUNT - 1, Math.floor(p * COUNT * 0.999))), pinned);
+
+  useEffect(() => {
+    if (desktop || reduced || touched || !inView) return;
+    const id = window.setInterval(() => setActive((v) => (v + 1) % COUNT), 3200);
+    return () => window.clearInterval(id);
+  }, [desktop, reduced, touched, inView]);
 
   // Keep the active chip visible in the phone stepper.
   useEffect(() => {
@@ -42,7 +55,10 @@ export function Lifecycle() {
   }, [active, reduced]);
 
   const go = (i: number) => {
-    if (reduced || !section.current) return setActive(i);
+    if (!pinned || !section.current) {
+      setTouched(true);
+      return setActive(i);
+    }
     const el = section.current;
     const top = el.getBoundingClientRect().top + window.scrollY;
     const range = el.offsetHeight - window.innerHeight;
@@ -52,13 +68,13 @@ export function Lifecycle() {
   const stage = lifecycle.stages[active];
 
   const body = (
-    <div ref={scene} className={`${reduced ? "py-24" : "sticky top-0 flex h-[100svh] items-center overflow-hidden py-20"}`} style={{ "--p": 0 } as React.CSSProperties}>
+    <div ref={scene} className={`${reduced ? "relative overflow-hidden py-24" : "relative overflow-hidden py-16 sm:py-20 lg:sticky lg:top-0 lg:flex lg:h-[100svh] lg:items-center lg:py-20"}`} style={{ "--p": 0 } as React.CSSProperties}>
       <div aria-hidden className="pointer-events-none absolute inset-0 -z-10">
         <div className="glow -left-40 top-1/4 h-[480px] w-[480px] bg-iris/30" />
         <div className="glow -right-40 bottom-0 h-[420px] w-[420px] bg-aqua/15" />
       </div>
       <div className="wrap grid w-full items-center gap-8 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-16">
-        <div>
+        <div className="min-w-0">
           <p className="kicker on-dark">{lifecycle.kicker}</p>
           <h2 className="h2 mt-4 max-w-[560px] !text-[clamp(30px,4.2vw,56px)]">{lifecycle.title}</h2>
           <p className="lead-text mt-4 max-w-[480px]">{lifecycle.sub}</p>
@@ -95,7 +111,7 @@ export function Lifecycle() {
           </ol>
         </div>
 
-        <div>
+        <div className="min-w-0">
           {/* Phones: horizontal stepper */}
           <ol ref={chips} className="no-bar -mx-5 mb-5 flex gap-2 overflow-x-auto px-5 lg:hidden" aria-label="Lifecycle stages">
             {lifecycle.stages.map((s, i) => (
@@ -104,7 +120,7 @@ export function Lifecycle() {
                   type="button"
                   onClick={() => go(i)}
                   aria-current={i === active ? "step" : undefined}
-                  className={`rounded-full border px-3.5 py-1.5 font-mono text-[11px] uppercase tracking-[0.1em] transition ${
+                  className={`min-h-[44px] rounded-full border px-4 font-mono text-[11.5px] uppercase tracking-[0.1em] transition ${
                     i === active ? "border-aqua bg-aqua/10 text-aqua" : "border-white/10 text-white/45"
                   }`}
                 >
@@ -114,7 +130,16 @@ export function Lifecycle() {
             ))}
           </ol>
 
-          <div className="relative">
+          <div
+            className="relative touch-pan-y"
+            onPointerDown={(e) => (swipe.current = e.clientX)}
+            onPointerUp={(e) => {
+              if (pinned || swipe.current === null) return;
+              const dx = e.clientX - swipe.current;
+              swipe.current = null;
+              if (Math.abs(dx) > 50) go((active + (dx < 0 ? 1 : -1) + COUNT) % COUNT);
+            }}
+          >
             <AppWindow url={`yourinstitute.vilms.in/${URLS[active]}`} className="relative" bodyClass="relative h-[300px] sm:h-[340px]">
               {SCREENS.map((Screen, i) => (
                 <div
@@ -142,7 +167,7 @@ export function Lifecycle() {
 
   return (
     <section id="lifecycle" aria-label={lifecycle.title} className="sec-dark noise">
-      {reduced ? body : <div ref={section} className="h-[460vh]">{body}</div>}
+      {reduced ? body : <div ref={section} className="lg:h-[460vh]">{body}</div>}
     </section>
   );
 }

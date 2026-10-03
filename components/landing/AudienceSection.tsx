@@ -22,7 +22,7 @@ export function AudienceSection() {
   const visual = VISUALS[audienceVisual[item.title]];
 
   return (
-    <section id="solutions" aria-labelledby="aud-title" className="relative overflow-hidden py-24 sm:py-32" style={{ background: "linear-gradient(180deg, #F6F7FB 0%, #EEF0FF 100%)" }}>
+    <section id="solutions" aria-labelledby="aud-title" className="relative overflow-hidden py-24 max-sm:py-20 sm:py-32" style={{ background: "linear-gradient(180deg, #F6F7FB 0%, #EEF0FF 100%)" }}>
       <div className="wrap">
         <div className="max-w-[760px]">
           <p className="kicker" data-reveal>
@@ -37,7 +37,7 @@ export function AudienceSection() {
         </div>
 
         <div className="mt-12 grid gap-10 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:gap-14">
-          <div role="tablist" aria-label="Who VILMS is for" aria-orientation="vertical" className="no-bar -mx-5 flex gap-2 overflow-x-auto px-5 lg:mx-0 lg:block lg:space-y-1 lg:overflow-visible lg:px-0">
+          <div role="tablist" aria-label="Who VILMS is for" aria-orientation="vertical" className="no-bar -mx-5 min-w-0 flex gap-2 overflow-x-auto px-5 lg:mx-0 lg:block lg:space-y-1 lg:overflow-visible lg:px-0">
             {audience.items.map((a, idx) => {
               const on = idx === i;
               return (
@@ -48,7 +48,7 @@ export function AudienceSection() {
                   aria-selected={on}
                   aria-controls="aud-panel"
                   onClick={() => setI(idx)}
-                  className={`group w-auto shrink-0 rounded-2xl text-left transition lg:block lg:w-full ${
+                  className={`group w-auto shrink-0 rounded-2xl text-left transition max-lg:min-h-[44px] lg:block lg:w-full ${
                     on ? "bg-night px-4 py-2.5 text-white lg:bg-white lg:p-5 lg:text-night lg:shadow-[0_24px_60px_-36px_rgba(11,16,32,.55)]" : "bg-white/60 px-4 py-2.5 text-slate-600 hover:bg-white lg:bg-transparent lg:px-5 lg:py-4"
                   }`}
                 >
@@ -66,7 +66,7 @@ export function AudienceSection() {
             })}
           </div>
 
-          <div id="aud-panel" role="tabpanel" aria-label={item.title}>
+          <div id="aud-panel" role="tabpanel" aria-label={item.title} className="min-w-0">
             <div key={item.title} className="pop">
               <p className="text-[16px] leading-relaxed text-slate-600 lg:hidden">{item.text}</p>
               <ul className="mt-4 flex flex-wrap gap-2 lg:mt-0">

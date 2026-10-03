@@ -85,12 +85,27 @@ function PlanCard({ plan, match }: { plan: Plan; match: boolean }) {
 export function PricingSection() {
   const id = useId();
   const [students, setStudents] = useState(1200);
+  // Phones: which card is in view in the swipeable row (kept in sync both ways).
+  const cardsRef = useRef<HTMLDivElement>(null);
+  const [card, setCard] = useState(0);
+  const [compare, setCompare] = useState(1);
+  const showCard = (idx: number) => {
+    const el = cardsRef.current?.children[idx] as HTMLElement | undefined;
+    cardsRef.current?.scrollTo({ left: (el?.offsetLeft ?? 0) - 20, behavior: "smooth" });
+    setCard(idx);
+  };
+  const onCardsScroll = () => {
+    const el = cardsRef.current;
+    if (!el || window.innerWidth >= 640) return;
+    const w = (el.children[0] as HTMLElement | undefined)?.offsetWidth ?? el.clientWidth;
+    setCard(Math.max(0, Math.min(plans.length - 1, Math.round(el.scrollLeft / (w + 16)))));
+  };
   const matched = plans.find((p) => students <= LIMITS[p.id]);
   const chartRef = useRef<HTMLDivElement>(null);
   const chartIn = useInView(chartRef, { once: true, margin: "-15% 0px" });
 
   return (
-    <section id="pricing" aria-labelledby="pricing-title" className="relative overflow-hidden bg-white py-24 sm:py-32">
+    <section id="pricing" aria-labelledby="pricing-title" className="relative overflow-hidden bg-white py-24 max-sm:py-20 sm:py-32">
       <TrackView name="pricing_view" />
       <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 h-[560px]" style={{ background: "radial-gradient(45% 60% at 50% 0%, rgba(34,211,238,.12), transparent 70%)" }} />
       <div className="wrap relative">
@@ -137,7 +152,7 @@ export function PricingSection() {
                   max={100000}
                   value={students}
                   onChange={(e) => setStudents(Math.max(1, Math.min(100000, Number(e.target.value) || 1)))}
-                  className="w-[110px] rounded-xl border border-white/15 bg-white/[0.06] px-3 py-2 text-right font-mono text-[15px] text-white outline-none focus:border-aqua"
+                  className="w-[110px] rounded-xl border border-white/15 bg-white/[0.06] px-3 py-2 text-right font-mono text-[15px] text-white outline-none focus:border-aqua max-sm:min-h-[44px] max-sm:text-[16px]"
                 />
               </div>
               <div className="mt-2 flex justify-between font-mono text-[10.5px] text-white/35">
@@ -159,7 +174,7 @@ export function PricingSection() {
                   <p className="mt-1 text-[13px] text-white/55">
                     {matched.students} · about ₹{(PRICES[matched.id] / students).toFixed(2)} per student at your size
                   </p>
-                  <Cta intent="trial" location={`plan_finder_${matched.id}`} className="b b-cta b-sm mt-4">
+                  <Cta intent="trial" location={`plan_finder_${matched.id}`} className="b b-cta b-sm mt-4 max-sm:!min-h-[48px] max-sm:w-full">
                     Start on {matched.name}
                   </Cta>
                 </div>
@@ -176,8 +191,29 @@ export function PricingSection() {
           </div>
         </div>
 
+        {/* Phones: plan selector that drives the swipeable cards below */}
+        <div role="tablist" aria-label="Choose a plan" className="mt-10 grid grid-cols-4 gap-1 rounded-2xl bg-snow p-1 ring-1 ring-slate-200 sm:hidden">
+          {plans.map((p, idx) => (
+            <button
+              key={p.id}
+              role="tab"
+              type="button"
+              aria-selected={idx === card}
+              onClick={() => showCard(idx)}
+              className={`min-h-[52px] rounded-xl px-1 text-center transition ${idx === card ? "bg-white shadow-sm ring-1 ring-slate-200" : ""}`}
+            >
+              <span className={`block text-[13px] font-semibold ${idx === card ? "text-night" : "text-slate-500"}`}>{p.name}</span>
+              <span className={`block text-[11.5px] ${idx === card ? "text-iris-600" : "text-slate-400"}`}>{p.price}</span>
+            </button>
+          ))}
+        </div>
+
         {/* Plans */}
-        <div className="no-bar -mx-5 mt-12 flex snap-x snap-mandatory gap-4 overflow-x-auto px-5 pb-4 sm:mx-0 sm:grid sm:grid-cols-2 sm:overflow-visible sm:px-0 lg:grid-cols-4">
+        <div
+          ref={cardsRef}
+          onScroll={onCardsScroll}
+          className="no-bar -mx-5 mt-12 flex snap-x snap-mandatory gap-4 overflow-x-auto px-5 pb-4 max-sm:mt-4 max-sm:scroll-px-5 sm:mx-0 sm:grid sm:grid-cols-2 sm:overflow-visible sm:px-0 lg:grid-cols-4"
+        >
           {plans.map((p) => (
             <PlanCard key={p.id} plan={p} match={matched?.id === p.id} />
           ))}
@@ -214,7 +250,37 @@ export function PricingSection() {
             Compare plans side by side
             <span className="grid h-8 w-8 place-items-center rounded-full bg-snow text-[18px] transition group-open:rotate-45">+</span>
           </summary>
-          <div className="no-bar overflow-x-auto border-t border-slate-200">
+          {/* Phones: one plan at a time instead of a wide table */}
+          <div className="border-t border-slate-200 p-4 md:hidden">
+            <div role="tablist" aria-label="Compare plan" className="no-bar -mx-4 flex gap-1.5 overflow-x-auto px-4">
+              {plans.map((p, idx) => (
+                <button
+                  key={p.id}
+                  role="tab"
+                  type="button"
+                  aria-selected={idx === compare}
+                  onClick={() => setCompare(idx)}
+                  className={`min-h-[44px] shrink-0 rounded-full px-4 text-[14px] font-semibold transition ${idx === compare ? "bg-night text-white" : "bg-snow text-slate-500"}`}
+                >
+                  {p.name} · {p.price}
+                </button>
+              ))}
+            </div>
+            <dl className="mt-3 divide-y divide-slate-100">
+              {COMPARE.map((row) => {
+                const v = row.values[compare];
+                return (
+                  <div key={row.label} className="flex items-start justify-between gap-4 py-3 text-[14px]">
+                    <dt className="text-slate-500">{row.label}</dt>
+                    <dd className="max-w-[58%] text-right font-medium text-slate-800">
+                      {v === "✓" ? <Check className="ml-auto h-4 w-4 text-iris" aria-label="Included" /> : v === "—" ? <Minus className="ml-auto h-4 w-4 text-slate-300" aria-label="Not included" /> : v}
+                    </dd>
+                  </div>
+                );
+              })}
+            </dl>
+          </div>
+          <div className="no-bar overflow-x-auto border-t border-slate-200 max-md:hidden">
             <table className="w-full min-w-[720px] text-left text-[14px]">
               <thead>
                 <tr className="bg-snow">
@@ -265,7 +331,7 @@ export function PricingSection() {
           </p>
         </div>
 
-        <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row" data-reveal>
+        <div className="mt-10 flex flex-col items-center justify-center gap-3 max-sm:items-stretch max-sm:text-center sm:flex-row" data-reveal>
           <p className="text-[15px] text-slate-600">Not sure which plan fits your institute?</p>
           <Cta intent="demo" location="pricing_footer" className="b b-cta" arrow>
             Book a Demo

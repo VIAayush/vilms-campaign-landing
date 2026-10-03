@@ -235,9 +235,9 @@ export function OldWay() {
       )}
 
       {/* What each broken link costs, and what replaces it */}
-      <div className="wrap pb-24 pt-8 sm:pb-32">
+      <div className="wrap pb-24 pt-8 max-sm:pb-16 sm:pb-32">
         <div className="mx-auto max-w-[1040px] overflow-hidden rounded-[28px] border border-slate-200/80 bg-white shadow-[0_30px_80px_-50px_rgba(11,16,32,.45)]">
-          <div className="grid grid-cols-[1fr_1fr] border-b border-slate-100 bg-slate-50/70 px-5 py-3 font-mono text-[11px] uppercase tracking-[0.14em] text-slate-400 sm:px-8">
+          <div className="grid grid-cols-[1fr_1fr] border-b border-slate-100 bg-slate-50/70 px-5 py-3 font-mono text-[11px] uppercase tracking-[0.14em] text-slate-400 max-sm:hidden sm:px-8">
             <span>Before</span>
             <span>With VILMS</span>
           </div>
@@ -248,6 +248,7 @@ export function OldWay() {
                   <p className="text-[15px] font-semibold text-slate-400 line-through decoration-rose-300 decoration-2">{it.title}</p>
                   <p className="mt-1 text-[13.5px] text-slate-400">{it.pain}</p>
                 </div>
+                <span className="-mb-1 mt-1 block font-mono text-[10.5px] uppercase tracking-[0.14em] text-iris sm:hidden">With VILMS</span>
                 <p className="flex items-start gap-2.5 text-[15px] font-medium text-night">
                   <ArrowRight className="mt-1 h-4 w-4 shrink-0 text-iris" aria-hidden /> {it.fix}
                 </p>

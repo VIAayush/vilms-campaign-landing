@@ -404,6 +404,66 @@
   border-radius: 999px;
 }
 
+/* ---------- Phones & tablets only (< 1024px). Desktop is untouched. ---------- */
+@media (max-width: 1023.98px) {
+  /* Swapped phone content (active showcase screen, pipeline chips) eases in. */
+  .v2 .m-pop {
+    animation: v2-pop 0.45s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  }
+  /* Lighter effects: big blurred glows stop drifting and blur less. */
+  .v2 .glow {
+    animation: none !important;
+    filter: blur(60px);
+  }
+  .reveal-armed .v2 [data-reveal="blur"]:not([data-shown="true"]) {
+    filter: none;
+  }
+  .v2 [data-reveal] {
+    transition-duration: 0.55s;
+  }
+}
+
+/* Low-powered phones (set in SiteProviders): keep motion, drop continuous loops. */
+@media (max-width: 1023.98px) {
+  .v2-lite .v2 .streak,
+  .v2-lite .v2 .pulse-ring::before {
+    display: none;
+  }
+  .v2-lite .v2 .dash-flow {
+    animation: none;
+  }
+  .v2-lite .v2 .glow {
+    filter: blur(40px);
+    opacity: 0.7;
+  }
+}
+
+/* The lead form on phones: a bottom sheet with large, zoom-safe inputs. */
+@media (max-width: 639.98px) {
+  .v2 dialog {
+    margin: auto 0 0;
+    width: 100%;
+    max-width: 100%;
+    max-height: 94dvh;
+    border-radius: 24px 24px 0 0;
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .v2 dialog[open] {
+    animation: v2-sheet 0.32s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  }
+  .v2 .field-input {
+    min-height: 48px;
+    font-size: 16px; /* below 16px iOS zooms the page on focus */
+  }
+  .v2 .field-label {
+    font-size: 14px;
+  }
+}
+@keyframes v2-sheet {
+  from { transform: translateY(40px); opacity: 0; }
+  to { transform: none; opacity: 1; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .v2 .streak,
   .v2 .pulse-ring::before {

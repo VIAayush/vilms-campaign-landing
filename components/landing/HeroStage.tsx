@@ -6,8 +6,8 @@ import { heroEvents, lifecycleChain, type HeroEvent } from "@/lib/landing";
 import { useInView, useReducedMotion, useScrollFrame, useTicker } from "./hooks";
 import { AppWindow, DashboardScreen } from "./screens";
 
-const ICON = { lead: UserPlus, enrol: GraduationCap, cart: ShoppingBag, live: Radio, eval: Sparkles, pay: IndianRupee, cert: Award, webinar: CalendarCheck } as const;
-const TONE: Record<HeroEvent["tone"], string> = {
+export const ICON = { lead: UserPlus, enrol: GraduationCap, cart: ShoppingBag, live: Radio, eval: Sparkles, pay: IndianRupee, cert: Award, webinar: CalendarCheck } as const;
+export const TONE: Record<HeroEvent["tone"], string> = {
   iris: "bg-iris-50 text-iris-600",
   aqua: "bg-aqua-50 text-aqua-600",
   violet: "bg-violet/10 text-violet",
@@ -16,7 +16,7 @@ const TONE: Record<HeroEvent["tone"], string> = {
   sun: "bg-sun-50 text-amber-600",
 };
 // Which lifecycle step each event belongs to.
-const STEP: Record<HeroEvent["id"], number> = { lead: 0, enrol: 1, purchase: 2, live: 3, eval: 4, pay: 5, cert: 6, webinar: 0 };
+export const STEP: Record<HeroEvent["id"], number> = { lead: 0, enrol: 1, purchase: 2, live: 3, eval: 4, pay: 5, cert: 6, webinar: 0 };
 
 const N = heroEvents.length;
 
@@ -71,7 +71,7 @@ export function HeroStage() {
   }, !reduced);
 
   return (
-    <div ref={wrap} className="in-stage relative mx-auto mt-14 w-full max-w-[1120px] text-left sm:mt-16">
+    <div ref={wrap} className="in-stage relative mx-auto mt-14 w-full max-w-[1120px] text-left max-md:hidden sm:mt-16">
       {/* glow under the product */}
       <div aria-hidden className="absolute inset-x-[8%] -top-10 bottom-10 rounded-[40px] opacity-70 blur-3xl" style={{ background: "radial-gradient(60% 60% at 50% 40%, rgba(91,91,246,.55), transparent 70%)" }} />
 

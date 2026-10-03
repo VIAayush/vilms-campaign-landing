@@ -5,6 +5,7 @@ import { MobileCta } from "@/components/landing/MobileCta";
 import { Navbar } from "@/components/landing/Navbar";
 import { SiteProviders } from "@/components/site/SiteProviders";
 import { ThirdPartyAnalytics } from "@/components/site/ThirdPartyAnalytics";
+import { getSiteAnalyticsIds } from "@/lib/integrations/dispatch";
 import "@/components/landing/landing.css";
 
 // The public site's own type system. Same CSS variable names as the root
@@ -15,7 +16,9 @@ const mono = JetBrains_Mono({ subsets: ["latin"], weight: ["400", "500"], variab
 
 export const viewport: Viewport = { themeColor: "#070B1A" };
 
-export default function SiteLayout({ children }: { children: React.ReactNode }) {
+export default async function SiteLayout({ children }: { children: React.ReactNode }) {
+  // GA4 / Meta Pixel IDs from enabled CRM integrations (cached 5 minutes).
+  const analytics = await getSiteAnalyticsIds();
   return (
     <div className={`v2 min-h-screen font-sans antialiased ${display.variable} ${sans.variable} ${mono.variable}`}>
       <SiteProviders>
@@ -29,7 +32,7 @@ export default function SiteLayout({ children }: { children: React.ReactNode }) 
         <main id="main">{children}</main>
         <Footer />
         <MobileCta />
-        <ThirdPartyAnalytics />
+        <ThirdPartyAnalytics ga4Id={analytics.ga4} pixelId={analytics.pixel} />
       </SiteProviders>
     </div>
   );

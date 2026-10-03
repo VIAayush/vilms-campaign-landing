@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { teach } from "@/lib/landing";
 import { useMediaQuery, useReducedMotion, useScrollProgress } from "./hooks";
 import { AppWindow, CourseBuilderScreen, LiveClassScreen, MaterialsScreen, VideoScreen, WebinarScreen } from "./screens";
@@ -57,6 +57,14 @@ export function TeachSection() {
   const scene = useRef<HTMLDivElement>(null);
   const trackEl = useRef<HTMLDivElement>(null);
   const bar = useRef<HTMLSpanElement>(null);
+  const carousel = useRef<HTMLDivElement>(null);
+  const [slide, setSlide] = useState(0);
+  const onCarouselScroll = () => {
+    const el = carousel.current;
+    if (!el) return;
+    const w = (el.children[0] as HTMLElement | undefined)?.offsetWidth ?? el.clientWidth;
+    setSlide(Math.max(0, Math.min(teach.panels.length - 1, Math.round(el.scrollLeft / (w + 16)))));
+  };
 
   useScrollProgress(section, scene, (p) => bar.current?.style.setProperty("transform", `scaleX(${p})`), pinned);
 
@@ -96,12 +104,39 @@ export function TeachSection() {
         <div className="wrap">
           <Heading />
         </div>
-        <div className="no-bar mt-10 flex snap-x snap-mandatory gap-4 overflow-x-auto px-5 pb-6 sm:px-8" tabIndex={0} aria-label="Teaching features — scroll sideways">
+        <div
+          ref={carousel}
+          onScroll={onCarouselScroll}
+          className="no-bar mt-10 flex snap-x snap-mandatory scroll-px-5 gap-4 overflow-x-auto px-5 pb-6 max-sm:mt-8 sm:scroll-px-8 sm:px-8"
+          tabIndex={0}
+          aria-label="Teaching features — scroll sideways"
+        >
           {teach.panels.map((p) => (
             <Panel key={p.id} p={p} wide={false} />
           ))}
         </div>
-        <p className="wrap text-[12px] text-slate-400">Swipe for more →</p>
+        <div className="wrap flex items-center justify-between gap-4">
+          <div className="flex gap-1.5" role="group" aria-label="Go to panel">
+            {teach.panels.map((p, i) => (
+              <button
+                key={p.id}
+                type="button"
+                aria-label={`${p.title} (${i + 1} of ${teach.panels.length})`}
+                aria-current={i === slide ? "true" : undefined}
+                onClick={() => {
+                  const el = carousel.current?.children[i] as HTMLElement | undefined;
+                  carousel.current?.scrollTo({ left: (el?.offsetLeft ?? 0) - 20, behavior: reduced ? "auto" : "smooth" });
+                }}
+                className="grid h-11 w-7 place-items-center"
+              >
+                <span className={`h-1.5 rounded-full transition-all duration-300 ${i === slide ? "w-6 bg-iris" : "w-1.5 bg-slate-300"}`} />
+              </button>
+            ))}
+          </div>
+          <p className="font-mono text-[12px] text-slate-400">
+            {slide + 1} / {teach.panels.length} · swipe
+          </p>
+        </div>
       </section>
     );
   }

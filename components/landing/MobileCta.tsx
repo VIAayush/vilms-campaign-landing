@@ -5,13 +5,18 @@ import { Cta } from "@/components/site/Cta";
 import { useScrollFrame } from "./hooks";
 
 // Keeps the main action within thumb reach on phones once the hero's own
-// buttons have scrolled away, and steps aside near the footer.
+// buttons have scrolled away. Steps aside near the footer and whenever a
+// lead form is visible, so it never covers the thing it points to.
 export function MobileCta() {
   const [show, setShow] = useState(false);
   useScrollFrame(() => {
     const y = window.scrollY;
     const nearEnd = y + window.innerHeight > document.documentElement.scrollHeight - 700;
-    setShow(y > 640 && !nearEnd);
+    // Step aside whenever a lead form is already on screen (dialog or /demo).
+    const form = document.querySelector<HTMLElement>("[data-lead-form]");
+    const r = form?.getBoundingClientRect();
+    const formVisible = !!r && r.height > 0 && r.top < window.innerHeight && r.bottom > 0;
+    setShow(y > 640 && !nearEnd && !formVisible);
   });
 
   return (

@@ -3,7 +3,7 @@ import { createHmac } from "crypto";
 import { createClient } from "@supabase/supabase-js";
 import { SUPABASE_ANON_KEY, SUPABASE_URL } from "@/lib/env";
 
-function ingestSecret(): string {
+export function ingestSecret(): string {
   const secret = process.env.LEAD_INGEST_SECRET;
   if (!secret) throw new Error("LEAD_INGEST_SECRET is not set");
   return secret;
@@ -11,7 +11,7 @@ function ingestSecret(): string {
 
 // A sessionless client: the ingest functions are authorised by the shared
 // secret, never by a user session or the service-role key.
-function ingestClient() {
+export function ingestClient() {
   return createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
     auth: { persistSession: false, autoRefreshToken: false },
   });

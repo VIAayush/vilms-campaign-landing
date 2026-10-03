@@ -103,7 +103,7 @@ export function Showcase() {
                     document.getElementById(`sc-tab-${tabs[n].id}`)?.focus();
                   }
                 }}
-                className={`relative shrink-0 overflow-hidden rounded-full px-4 py-2 text-[14px] font-semibold transition-colors sm:px-5 ${
+                className={`relative shrink-0 overflow-hidden rounded-full px-4 py-2 text-[14px] font-semibold transition-colors max-sm:min-h-[44px] sm:px-5 ${
                   idx === i ? "bg-night text-white" : "text-slate-500 hover:text-night"
                 }`}
               >
@@ -131,24 +131,27 @@ export function Showcase() {
           onFocus={() => setPaused(true)}
           onBlur={() => setPaused(false)}
         >
-          <div key={tab.id} className="pop order-2 lg:order-1">
+          <div key={tab.id} className="pop order-2 min-w-0 lg:order-1">
             <p className="font-mono text-[12px] uppercase tracking-[0.16em] text-iris">
               {String(i + 1).padStart(2, "0")} / {String(tabs.length).padStart(2, "0")} · {tab.label}
             </p>
             <h3 className="mt-3 font-display text-[clamp(26px,3vw,40px)] font-semibold leading-[1.08] tracking-tight">{tab.title}</h3>
             <p className="mt-3 text-[16px] leading-relaxed text-slate-600">{tab.text}</p>
             <ul className="mt-6 space-y-2.5">
-              {tab.points.map((p) => (
-                <CheckItem key={p}>{p}</CheckItem>
+              {tab.points.map((p, pi) => (
+                // Phones keep the three key points; the rest stay on larger screens.
+                <CheckItem key={p} className={pi >= 3 ? "max-sm:hidden" : ""}>
+                  {p}
+                </CheckItem>
               ))}
             </ul>
-            <Cta intent="demo" location={`showcase_${tab.id}`} className="b b-dark mt-8">
+            <Cta intent="demo" location={`showcase_${tab.id}`} className="b b-dark mt-8 max-sm:mt-6 max-sm:w-full">
               See it in a demo <ArrowRight className="h-4 w-4" aria-hidden />
             </Cta>
           </div>
 
           <div
-            className="order-1 touch-pan-y lg:order-2"
+            className="order-1 min-w-0 touch-pan-y lg:order-2"
             onPointerDown={(e) => (swipe.current = e.clientX)}
             onPointerUp={(e) => {
               if (swipe.current === null) return;
@@ -159,12 +162,13 @@ export function Showcase() {
           >
             <div className="relative">
               <div aria-hidden className="absolute -inset-6 rounded-[36px] opacity-60 blur-2xl" style={{ background: "conic-gradient(from 180deg at 50% 50%, rgba(91,91,246,.25), rgba(34,211,238,.2), rgba(139,92,246,.25), rgba(91,91,246,.25))" }} />
-              <AppWindow url={`yourinstitute.vilms.in/${URLS[tab.id]}`} className="relative" bodyClass="relative h-[340px] sm:h-[380px]">
+              <AppWindow url={`yourinstitute.vilms.in/${URLS[tab.id]}`} className="relative" bodyClass="relative sm:h-[380px]">
                 {tabs.map((t, idx) => (
                   <div
                     key={t.id}
                     aria-hidden={idx !== i}
-                    className="absolute inset-0 bg-[#F7F8FC] transition-all duration-500 ease-out"
+                    // Phones render only the active screen, at its natural height.
+                    className={`absolute inset-0 bg-[#F7F8FC] transition-all duration-500 ease-out ${idx === i ? "m-pop max-sm:relative" : "max-sm:hidden"}`}
                     style={{
                       opacity: idx === i ? 1 : 0,
                       transform: idx === i ? "none" : `translateX(${idx < i ? -24 : 24}px)`,

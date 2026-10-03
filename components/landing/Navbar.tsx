@@ -12,6 +12,13 @@ import { LogoMark } from "./screens";
 
 const ICONS = { teach: BookOpen, assess: ClipboardCheck, grow: Users, payments: IndianRupee, brand: Palette, manage: UsersRound } as const;
 
+const MOBILE_LINKS = [
+  { href: "/#solutions", label: "Solutions" },
+  { href: "/#pricing", label: "Pricing" },
+];
+const MOBILE_LINK =
+  "flex min-h-[60px] w-full items-center justify-between border-b border-white/10 text-left font-display text-[22px] font-medium tracking-tight text-white";
+
 const LINKS = [
   { href: "/#solutions", label: "Solutions" },
   { href: "/#why", label: "Why VILMS" },
@@ -28,6 +35,7 @@ export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [menu, setMenu] = useState(false);
   const [product, setProduct] = useState(false);
+  const [features, setFeatures] = useState(false);
   const bar = useRef<HTMLDivElement>(null);
   const closeTimer = useRef<number | undefined>(undefined);
 
@@ -61,7 +69,7 @@ export function Navbar() {
             : "h-[66px] border-transparent bg-transparent"
         }`}
       >
-        <Link href="/" className="flex items-center gap-2.5 rounded-lg pr-2 text-white" aria-label="VILMS home">
+        <Link href="/" className="flex items-center gap-2.5 rounded-lg pr-2 text-white max-lg:min-h-[44px]" aria-label="VILMS home">
           <LogoMark className="h-8 w-8" />
           <span className="font-display text-[19px] font-semibold tracking-tight">VILMS</span>
         </Link>
@@ -154,7 +162,7 @@ export function Navbar() {
           </span>
           <button
             type="button"
-            className="grid h-10 w-10 place-items-center rounded-xl text-white lg:hidden"
+            className="grid h-11 w-11 place-items-center rounded-xl text-white lg:hidden"
             aria-label={menu ? "Close menu" : "Open menu"}
             aria-expanded={menu}
             aria-controls="mobile-nav"
@@ -169,51 +177,65 @@ export function Navbar() {
         </div>
       </div>
 
-      {/* Mobile menu */}
+      {/* Mobile menu (lg:hidden — the desktop nav above is unchanged) */}
       <div
         id="mobile-nav"
         inert={!menu}
-        className={`fixed inset-0 top-0 -z-10 bg-night/[0.97] px-5 pb-8 pt-24 backdrop-blur-xl transition-opacity duration-300 lg:hidden ${
-          menu ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"
+        className={`fixed inset-0 top-0 -z-10 overflow-y-auto bg-night/[0.98] px-5 pb-[calc(24px+env(safe-area-inset-bottom))] pt-[92px] backdrop-blur-xl transition-[opacity,transform] duration-300 ease-out lg:hidden ${
+          menu ? "pointer-events-auto translate-y-0 opacity-100" : "pointer-events-none -translate-y-3 opacity-0"
         }`}
       >
-        <nav aria-label="Mobile" className="flex h-full flex-col">
-          <p className="kicker on-dark">Product</p>
-          <ul className="mt-3 grid grid-cols-2 gap-2">
-            {navProduct.map((item) => {
-              const Icon = ICONS[item.tab];
-              return (
-                <li key={item.tab}>
-                  <a
-                    href={productHref}
-                    onClick={() => {
-                      openShowcaseTab(item.tab);
-                      setMenu(false);
-                    }}
-                    className="flex items-center gap-2.5 rounded-xl border border-white/10 bg-white/[0.04] px-3 py-3 text-[15px] font-medium text-white"
-                  >
-                    <Icon className="h-4 w-4 text-aqua" aria-hidden /> {item.label}
-                  </a>
-                </li>
-              );
-            })}
-          </ul>
-          <ul className="mt-6 border-t border-white/10">
-            {[...LINKS, { href: SIGNIN_URL, label: "Sign in" }].map((l) => (
+        <nav aria-label="Mobile" className="flex min-h-full flex-col">
+          <ul className="border-t border-white/10">
+            <li>
+              <a href={productHref} onClick={() => setMenu(false)} className={MOBILE_LINK}>
+                Product <ArrowRight className="h-5 w-5 text-white/35" aria-hidden />
+              </a>
+            </li>
+            <li>
+              <button type="button" aria-expanded={features} aria-controls="mobile-features" onClick={() => setFeatures((v) => !v)} className={MOBILE_LINK}>
+                Features <ChevronDown className={`h-5 w-5 text-white/35 transition-transform duration-300 ${features ? "rotate-180" : ""}`} aria-hidden />
+              </button>
+              <div
+                id="mobile-features"
+                className={`grid transition-[grid-template-rows,opacity] duration-300 ease-out ${features ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"}`}
+              >
+                <ul className="grid min-h-0 grid-cols-2 gap-2 overflow-hidden pt-3" inert={!features}>
+                  {navProduct.map((item) => {
+                    const Icon = ICONS[item.tab];
+                    return (
+                      <li key={item.tab}>
+                        <a
+                          href={productHref}
+                          onClick={() => {
+                            openShowcaseTab(item.tab);
+                            setMenu(false);
+                          }}
+                          className="flex min-h-[48px] items-center gap-2.5 rounded-xl border border-white/10 bg-white/[0.04] px-3 text-[15px] font-medium text-white"
+                        >
+                          <Icon className="h-4 w-4 shrink-0 text-aqua" aria-hidden /> {item.label}
+                        </a>
+                      </li>
+                    );
+                  })}
+                  <li className="col-span-2 h-2" aria-hidden />
+                </ul>
+              </div>
+            </li>
+            {MOBILE_LINKS.map((l) => (
               <li key={l.label}>
-                <a
-                  href={l.href}
-                  onClick={() => setMenu(false)}
-                  className="flex items-center justify-between border-b border-white/10 py-4 font-display text-[22px] font-medium tracking-tight text-white"
-                >
-                  {l.label} <ArrowRight className="h-5 w-5 text-white/40" aria-hidden />
+                <a href={l.href} onClick={() => setMenu(false)} className={MOBILE_LINK}>
+                  {l.label} <ArrowRight className="h-5 w-5 text-white/35" aria-hidden />
                 </a>
               </li>
             ))}
           </ul>
+          <a href={SIGNIN_URL} className="mt-5 inline-flex min-h-[44px] items-center text-[15px] font-medium text-white/60">
+            Already a customer? <span className="ml-1.5 text-white">Sign in</span>
+          </a>
           {/* Close the menu as the lead form opens over it. */}
           <div className="mt-auto grid gap-2.5 pt-8" onClickCapture={() => setMenu(false)}>
-            <Cta intent="demo" location="mobile_menu" className="b b-cta w-full" arrow>
+            <Cta intent="demo" location="mobile_menu" className="b b-cta h-[54px] w-full text-[16px]" arrow>
               Book a Demo
             </Cta>
             <Cta intent="trial" location="mobile_menu_trial" className="b b-glass w-full">

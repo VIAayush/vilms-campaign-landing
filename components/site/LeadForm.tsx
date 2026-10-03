@@ -125,7 +125,7 @@ export function LeadForm({ interest, location, onClose }: Props) {
   });
 
   return (
-    <form ref={formRef} onSubmit={(e) => void handleSubmit(submitLead)(e)} noValidate className="space-y-4">
+    <form ref={formRef} onSubmit={(e) => void handleSubmit(submitLead)(e)} noValidate className="space-y-4" data-lead-form>
       {TURNSTILE_SITE_KEY ? (
         <Script src="https://challenges.cloudflare.com/turnstile/v0/api.js" strategy="lazyOnload" />
       ) : null}

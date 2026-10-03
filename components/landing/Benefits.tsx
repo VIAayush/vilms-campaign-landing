@@ -4,7 +4,7 @@ import { benefits } from "@/lib/content";
 // Editorial list rather than a card grid: big type, one line each.
 export function Benefits() {
   return (
-    <section aria-labelledby="benefits-title" className="sec-dark noise overflow-hidden py-24 sm:py-32">
+    <section aria-labelledby="benefits-title" className="sec-dark noise overflow-hidden py-24 max-sm:py-20 sm:py-32">
       <div aria-hidden className="pointer-events-none absolute inset-0 -z-10">
         <div className="glow -left-32 top-1/3 h-[460px] w-[460px] bg-violet/25" />
       </div>
@@ -26,7 +26,7 @@ export function Benefits() {
         <ol className="border-t border-white/10">
           {benefits.items.map((b, i) => (
             <li key={b.title} className="group border-b border-white/10" data-reveal>
-              <div className="flex items-start gap-5 py-6 transition-[padding] duration-300 group-hover:pl-2 sm:gap-8">
+              <div className="flex items-start gap-5 py-6 transition-[padding] duration-300 group-hover:pl-2 max-sm:gap-4 max-sm:py-5 sm:gap-8">
                 <span className="pt-1.5 font-mono text-[12px] text-white/35 transition-colors group-hover:text-aqua">{String(i + 1).padStart(2, "0")}</span>
                 <div className="min-w-0 flex-1">
                   <p className="font-display text-[clamp(21px,2.3vw,30px)] font-medium leading-tight tracking-tight">{b.title}</p>

@@ -2,7 +2,7 @@ import Link from "next/link";
 import { LogOut } from "lucide-react";
 import { CrmNav } from "@/components/crm/CrmNav";
 import { Logo } from "@/components/site/Logo";
-import { requireMember } from "@/lib/crm/dal";
+import { isAdmin, requireMember } from "@/lib/crm/dal";
 import { roleLabel } from "@/lib/lead-options";
 import { signOut } from "../login/actions";
 
@@ -36,7 +36,7 @@ export default async function CrmAppLayout({ children }: { children: React.React
             <Logo />
             <span className="rounded bg-white/10 px-1.5 py-0.5 font-mono text-[10.5px] uppercase tracking-wider text-brass-soft">CRM</span>
           </Link>
-          <CrmNav isOwner={isOwner} layout="side" />
+          <CrmNav isOwner={isOwner} isAdmin={isAdmin(member.role)} layout="side" />
         </div>
         <div className="space-y-2 border-t border-white/10 px-2 pt-4">
           {who}
@@ -52,7 +52,7 @@ export default async function CrmAppLayout({ children }: { children: React.React
           </Link>
           {signOutButton}
         </div>
-        <CrmNav isOwner={isOwner} layout="top" />
+        <CrmNav isOwner={isOwner} isAdmin={isAdmin(member.role)} layout="top" />
       </header>
 
       <main id="main" className="min-w-0 flex-1 px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
