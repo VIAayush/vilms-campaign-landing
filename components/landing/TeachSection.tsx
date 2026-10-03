@@ -90,7 +90,7 @@ export function TeachSection() {
   }, [pinned]);
 
   const bg = (
-    <div aria-hidden className="pointer-events-none absolute inset-0 -z-10">
+    <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
       <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, #F1F1FF 0%, #F6F7FB 60%, #EEF9FC 100%)" }} />
       <div className="glow -right-32 top-10 h-[420px] w-[420px] bg-aqua/20" />
       <div className="glow -left-24 bottom-0 h-[380px] w-[380px] bg-iris/15" />

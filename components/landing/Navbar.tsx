@@ -5,7 +5,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ArrowRight, BookOpen, ChevronDown, ClipboardCheck, IndianRupee, Menu, Palette, Users, UsersRound, X } from "lucide-react";
 import { Cta } from "@/components/site/Cta";
-import { SIGNIN_URL } from "@/lib/env";
 import { navProduct } from "@/lib/landing";
 import { useScrollFrame } from "./hooks";
 import { LogoMark } from "./screens";
@@ -146,9 +145,6 @@ export function Navbar() {
         </nav>
 
         <div className="ml-auto flex items-center gap-1.5">
-          <a href={SIGNIN_URL} className="hidden rounded-lg px-3 py-2 text-[14px] font-medium text-white/75 transition hover:text-white md:block">
-            Sign in
-          </a>
           {/* Visibility lives on wrappers: the .b button class sets its own display. */}
           <span className="hidden sm:contents">
             <Cta intent="demo" location="nav" className="b b-cta b-sm">
@@ -230,9 +226,6 @@ export function Navbar() {
               </li>
             ))}
           </ul>
-          <a href={SIGNIN_URL} className="mt-5 inline-flex min-h-[44px] items-center text-[15px] font-medium text-white/60">
-            Already a customer? <span className="ml-1.5 text-white">Sign in</span>
-          </a>
           {/* Close the menu as the lead form opens over it. */}
           <div className="mt-auto grid gap-2.5 pt-8" onClickCapture={() => setMenu(false)}>
             <Cta intent="demo" location="mobile_menu" className="b b-cta h-[54px] w-full text-[16px]" arrow>
