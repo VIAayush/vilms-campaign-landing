@@ -47,8 +47,10 @@ export function SiteProviders({ children }: { children: React.ReactNode }) {
 }
 
 // Fades sections in on scroll. Anything already on screen is marked shown
-// before the hidden state is armed (no flash), and a timer shows everything
-// after 3s regardless, so content can never stay invisible.
+// before the hidden state is armed (no flash). As a safety net, a timer shows
+// whatever is on or above the screen after 3s even if the observer never
+// fired, so readable content can't get stuck invisible, while content further
+// down still reveals as it's reached.
 function armReveal() {
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
   const els = Array.from(document.querySelectorAll<HTMLElement>("[data-reveal]"));
@@ -69,7 +71,11 @@ function armReveal() {
     { rootMargin: "0px 0px -8% 0px", threshold: 0.05 },
   );
   els.filter((el) => el.dataset.shown !== "true").forEach((el) => io.observe(el));
-  const safety = window.setTimeout(() => els.forEach((el) => (el.dataset.shown = "true")), 3000);
+  const safety = window.setTimeout(() => {
+    els.forEach((el) => {
+      if (el.getBoundingClientRect().top < window.innerHeight) el.dataset.shown = "true";
+    });
+  }, 3000);
   return () => {
     io.disconnect();
     window.clearTimeout(safety);

@@ -18,14 +18,23 @@ export default async function DemoPage({ searchParams }: { searchParams: Promise
   const interest: Interest = sp.intent === "trial" ? "free_trial" : "book_demo";
 
   return (
-    <section className="bg-paper py-12 sm:py-20">
-      <div className="container-x grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:gap-14">
-        <div>
-          <p className="eyebrow">{interest === "free_trial" ? "Start your 14-day trial" : finalCta.demo.kicker}</p>
-          <h1 className="mt-3 text-[38px] font-extrabold leading-[1.02] sm:text-[52px]">
-            {interest === "free_trial" ? "Get your institute online." : "See VILMS on your institute's setup."}
+    <section className="sec-dark noise overflow-hidden pb-20 pt-[120px] sm:pb-28 sm:pt-[150px]">
+      <div aria-hidden className="pointer-events-none absolute inset-0 -z-10">
+        <div className="glow -left-32 top-0 h-[520px] w-[520px] bg-iris/40" />
+        <div className="glow -right-32 bottom-0 h-[460px] w-[460px] bg-aqua/15" />
+        <div className="grid-bg absolute inset-0" />
+      </div>
+      <div className="wrap grid items-start gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16">
+        <div className="lg:sticky lg:top-28">
+          <p className="kicker on-dark">{interest === "free_trial" ? "Start your 14-day trial" : finalCta.demo.kicker}</p>
+          <h1 className="display mt-5 text-balance text-[clamp(38px,4.6vw,64px)]">
+            {interest === "free_trial" ? "Get your institute online." : (
+              <>
+                See VILMS on your <span className="grad-text">institute&apos;s setup.</span>
+              </>
+            )}
           </h1>
-          <p className="lede mt-4">{finalCta.demo.text}</p>
+          <p className="lead-text mt-5 max-w-[520px]">{finalCta.demo.text}</p>
           <ul className="mt-8 space-y-3">
             {[
               "Courses, live classes, tests and answer evaluation in one place",
@@ -33,17 +42,20 @@ export default async function DemoPage({ searchParams }: { searchParams: Promise
               "Your brand, your domain — students never see VILMS",
               "Plans from ₹499/month · 14-day free trial, no card",
             ].map((t) => (
-              <li key={t} className="flex items-start gap-3 text-[15.5px] text-ink">
-                <Check aria-hidden className="mt-0.5 h-5 w-5 shrink-0 text-ok" /> {t}
+              <li key={t} className="flex items-start gap-3 text-[15.5px] text-white/80">
+                <span className="mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full bg-aqua/15 text-aqua">
+                  <Check className="h-3 w-3" strokeWidth={3} aria-hidden />
+                </span>
+                {t}
               </li>
             ))}
           </ul>
-          <p className="mt-10 font-display text-[22px] font-bold text-ink">
-            {hero.titleTop} <span className="text-brass-text">{hero.titleBottom}</span>
+          <p className="mt-10 font-display text-[22px] font-semibold tracking-tight">
+            {hero.titleTop} <span className="warm-text">{hero.titleBottom}</span>
           </p>
         </div>
 
-        <div className="card p-5 sm:p-8">
+        <div className="rounded-[28px] bg-white p-5 text-night shadow-[0_50px_120px_-40px_rgba(0,0,0,.8)] sm:p-8">
           <LeadForm interest={interest} location={interest === "free_trial" ? "demo_page_trial" : "demo_page"} />
         </div>
       </div>

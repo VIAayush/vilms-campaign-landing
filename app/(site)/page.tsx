@@ -1,12 +1,16 @@
-import { Hero } from "@/components/site/sections/Hero";
-import { Problem } from "@/components/site/sections/Problem";
-import { Solution } from "@/components/site/sections/Solution";
-import { Features } from "@/components/site/sections/Features";
-import { WhyVilms } from "@/components/site/sections/WhyVilms";
-import { Audience } from "@/components/site/sections/Audience";
-import { Benefits } from "@/components/site/sections/Benefits";
-import { Pricing } from "@/components/site/sections/Pricing";
-import { FinalCta } from "@/components/site/sections/FinalCta";
+import { AssessSection } from "@/components/landing/AssessSection";
+import { AudienceSection } from "@/components/landing/AudienceSection";
+import { Benefits } from "@/components/landing/Benefits";
+import { BrandSection } from "@/components/landing/BrandSection";
+import { FinalCta } from "@/components/landing/FinalCta";
+import { GrowSection } from "@/components/landing/GrowSection";
+import { Hero } from "@/components/landing/Hero";
+import { Lifecycle } from "@/components/landing/Lifecycle";
+import { OldWay } from "@/components/landing/OldWay";
+import { PricingSection } from "@/components/landing/PricingSection";
+import { RevenueSection } from "@/components/landing/RevenueSection";
+import { Showcase } from "@/components/landing/Showcase";
+import { TeachSection } from "@/components/landing/TeachSection";
 import { pricing } from "@/lib/content";
 import { SITE_URL } from "@/lib/env";
 
@@ -29,18 +33,23 @@ const jsonLd = {
   })),
 };
 
+// The story: discover → understand → visualise → interact → trust → convert.
 export default function HomePage() {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }} />
       <Hero />
-      <Problem />
-      <Solution />
-      <Features />
-      <WhyVilms />
-      <Audience />
+      <OldWay />
+      <Lifecycle />
+      <Showcase />
+      <TeachSection />
+      <AssessSection />
+      <GrowSection />
+      <RevenueSection />
+      <BrandSection />
+      <AudienceSection />
       <Benefits />
-      <Pricing />
+      <PricingSection />
       <FinalCta />
     </>
   );

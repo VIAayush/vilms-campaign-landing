@@ -40,6 +40,14 @@ const config: Config = {
         err: { DEFAULT: "#B23B3B", bg: "#F7E5E3" },
         info: { DEFAULT: "#33628C", bg: "#E6EDF4" },
         ai: { DEFAULT: "#6B4FA0", bg: "#EEE9F6" },
+
+        // ---- Public site (2026 redesign). The CRM keeps the tokens above. ----
+        night: { DEFAULT: "#070B1A", 2: "#0C1229", 3: "#131B3B", 4: "#1C2650" },
+        iris: { DEFAULT: "#5B5BF6", 600: "#4B4BE0", 400: "#8183FF", 300: "#A9ABFF", 100: "#E4E5FF", 50: "#F1F1FF" },
+        violet: { DEFAULT: "#8B5CF6", 300: "#C4B5FD" },
+        aqua: { DEFAULT: "#22D3EE", 600: "#0AAFC9", 300: "#7DEBF8", 50: "#E8FBFE" },
+        sun: { DEFAULT: "#FFB547", 600: "#FF9F1C", 50: "#FFF6E6" },
+        snow: { DEFAULT: "#F6F7FB", 2: "#EEF0F7" },
       },
       boxShadow: {
         card: "0 1px 3px rgba(10,46,37,.06)",
@@ -53,6 +61,9 @@ const config: Config = {
         "float-y": { "0%,100%": { transform: "translateY(0)" }, "50%": { transform: "translateY(-6px)" } },
         "dash-flow": { to: { strokeDashoffset: "-24" } },
         "fade-up": { from: { opacity: "0", transform: "translateY(10px)" }, to: { opacity: "1", transform: "none" } },
+        "drift-a": { "0%": { transform: "translate3d(0,0,0) scale(1)" }, "100%": { transform: "translate3d(-8%,6%,0) scale(1.15)" } },
+        "drift-b": { "0%": { transform: "translate3d(0,0,0) scale(1.1)" }, "100%": { transform: "translate3d(9%,-7%,0) scale(0.95)" } },
+        marquee: { from: { transform: "translateX(0)" }, to: { transform: "translateX(-50%)" } },
       },
       animation: {
         "aurora-a": "aurora-a 26s ease-in-out infinite alternate",
@@ -60,6 +71,10 @@ const config: Config = {
         "float-y": "float-y 6s ease-in-out infinite",
         "dash-flow": "dash-flow 1.6s linear infinite",
         "fade-up": "fade-up .35s ease-out both",
+        "drift-a": "drift-a 22s ease-in-out infinite alternate",
+        "drift-b": "drift-b 28s ease-in-out infinite alternate",
+        "float-slow": "float-y 7s ease-in-out infinite",
+        marquee: "marquee 40s linear infinite",
       },
     },
   },

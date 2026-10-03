@@ -11,13 +11,19 @@ export const metadata: Metadata = {
 // legal advisor before relying on it.
 export default function PrivacyPage() {
   return (
-    <article className="bg-paper py-14 sm:py-20">
-      <div className="container-x max-w-3xl">
-        <p className="eyebrow">Privacy</p>
-        <h1 className="mt-3 text-[38px] font-extrabold leading-tight sm:text-[48px]">Privacy policy</h1>
-        <p className="mt-2 text-[14px] text-muted">For the VILMS website ({brand.domain}). Last updated October 2026.</p>
-
-        <div className="mt-8 space-y-7 text-[15.5px] leading-relaxed text-body">
+    <article>
+      <header className="sec-dark noise overflow-hidden pb-16 pt-[130px]">
+        <div aria-hidden className="pointer-events-none absolute inset-0 -z-10">
+          <div className="glow -left-24 -top-20 h-[420px] w-[420px] bg-iris/35" />
+        </div>
+        <div className="wrap max-w-3xl">
+          <p className="kicker on-dark">Privacy</p>
+          <h1 className="display mt-4 text-[clamp(38px,5vw,60px)]">Privacy policy</h1>
+          <p className="mt-3 text-[14px] text-white/55">For the VILMS website ({brand.domain}). Last updated October 2026.</p>
+        </div>
+      </header>
+      <div className="wrap max-w-3xl py-14 sm:py-20">
+        <div className="space-y-8 text-[15.5px] leading-relaxed text-slate-600 [&_h2]:font-display [&_h2]:text-night">
           <section>
             <h2 className="text-[22px] font-bold">What we collect when you contact us</h2>
             <p className="mt-2">
